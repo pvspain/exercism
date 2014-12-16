@@ -3,12 +3,12 @@ package clock
 import "fmt"
 
 func normaliseHour(h int) int {
-	r := h%24
+	r := h % 24
 	if h >= 0 {
 		return r
 	}
 	if r != 0 {
-	  return 24 + r
+		return 24 + r
 	}
 	return 0
 }
@@ -18,7 +18,7 @@ func normaliseMinute(m int) (hours int, minutes int) {
 	if m >= 0 {
 		return d, r
 	}
-	if r != 0 { 
+	if r != 0 {
 		return d - 1, 60 + r
 	}
 	return d, 0
@@ -39,7 +39,7 @@ func (c Clock) String() string {
 }
 
 func (c Clock) Add(minutes int) Clock {
-  hours := 0
+	hours := 0
 	hours, c.minute = normaliseMinute(c.minute + minutes)
 	c.hour = normaliseHour(c.hour + hours)
 	return c
