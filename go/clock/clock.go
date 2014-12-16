@@ -2,45 +2,27 @@ package clock
 
 import "fmt"
 
-func normaliseHour(h int) int {
-	r := h % 24
-	if h >= 0 {
-		return r
-	}
-	if r != 0 {
-		return 24 + r
-	}
-	return 0
-}
-
-func normaliseMinute(m int) (hours int, minutes int) {
-	d, r := m/60, m%60
-	if m >= 0 {
-		return d, r
-	}
-	if r != 0 {
-		return d - 1, 60 + r
-	}
-	return d, 0
-}
-
 type Clock struct {
-	hour, minute int
+	minutes int
+}
+
+func normalise(m int) int {
+	minutes := m % (24 * 60)
+	if minutes < 0 {
+		minutes += (24 * 60)
+	}
+	return minutes
 }
 
 func New(h, m int) Clock {
-	carry, minute := normaliseMinute(m)
-	hour := normaliseHour(h + carry)
-	return Clock{hour, minute}
+	return Clock{normalise(h*60 + m)}
 }
 
 func (c Clock) String() string {
-	return fmt.Sprintf("%.2d:%.2d", c.hour, c.minute)
+	return fmt.Sprintf("%02d:%02d", c.minutes/60, c.minutes%60)
 }
 
-func (c Clock) Add(minutes int) Clock {
-	hours := 0
-	hours, c.minute = normaliseMinute(c.minute + minutes)
-	c.hour = normaliseHour(c.hour + hours)
+func (c Clock) Add(m int) Clock {
+	c.minutes = normalise(c.minutes + m)
 	return c
 }
